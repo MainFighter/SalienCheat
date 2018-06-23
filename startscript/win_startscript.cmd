@@ -3,7 +3,7 @@
 :: Made by Main Fighter [mainfighter.com]
 :: Simple start script for SteamDB Cheat [https://github.com/SteamDatabase/SalienCheat]
 :: Adapted from my https://github.com/MainFighter/salien-bot start script for use with this
-:: v1.1.0 [23-06-2018]
+:: v1.1.1 [23-06-2018]
 
 ::===============================================================================================================::
 
@@ -71,6 +71,7 @@ echo Updating Bot Files
 :: Sets the directory back to the root
 cd "%rootdir%"
 
+:: Checks if the bot files exist > if they do updates the files > changes back to root dir (needed or bots don't start, anyone know why?)
 if exist %botdir% ( cd %botdir% & git pull --quiet & cd "%rootdir%" & echo Bot files updated ) else ( echo Bot files don't exist )
 
 call :SetDefaults
@@ -87,7 +88,7 @@ echo %name% - Starting bot
 :: Sets the directory back to the root
 cd "%rootdir%"
 
-:: Opens CMD Window > Sets title and color of window > Changes to dir > runs npm install if enabled > starts bot
+:: Opens CMD Window > Sets title and color of window > Changes to dir > starts bot
 set commandline="title Sailen Bot - %name% & color %color% & %phppath% %botpath% %token% & exit"
 if %enabled%==true if %minimized%==true (start /min cmd /k  %commandline%) else (start cmd /k %commandline%)
 
