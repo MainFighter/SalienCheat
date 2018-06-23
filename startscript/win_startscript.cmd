@@ -71,7 +71,7 @@ echo Updating Bot Files
 :: Sets the directory back to the root
 cd "%rootdir%"
 
-if exist %botdir% ( cd %botdir% & git pull --quiet & echo Bot files updated ) else ( echo Bot files don't exist )
+if exist %botdir% ( cd %botdir% & git pull --quiet & cd "%rootdir%" & echo Bot files updated ) else ( echo Bot files don't exist )
 
 call :SetDefaults
 

@@ -11,13 +11,13 @@ set autodownloadbot=true
 set autoupdatebot=true
 
 :: Path to PHP Executable
-set phpdir=.\bin\php
+set phpdir=bin\php
 set phppath=%phpdir%\php.exe
 
 :: Path to actual cheat.php file
-set botdir=.\botfiles
+set botdir=botfiles
 set botpath=%botdir%\cheat.php
 
 :: Debug Mode
 :: You won't need to use it
-set debug==false
+set debug=false
