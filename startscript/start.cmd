@@ -4,7 +4,7 @@ cd "%~dp0"
 :: Made by Main Fighter [mainfighter.com]
 :: Start script for SteamDB's SailenCheat [https://github.com/SteamDatabase/SalienCheat]
 :: Adapted from start script for meepen's sailen-bot [https://github.com/meepen/salien-bot]
-:: v1.3.0 [30-06-2018]
+:: v1.3.1 [30-06-2018]
 
 ::===============================================================================================================::
 
@@ -127,18 +127,20 @@ goto :eof
 :DownloadPHP
 
 :: Actual script stuff
-if not exist "%bindir%" ( mkdir "%bindir%" ) else ( echo %bindir% already exists )
-if exist "%bindir%" ( cd "%bindir%" ) else ( echo %bindir% missing & goto :eof )
+if not exist "%bindir%" ( mkdir "%bindir%" ) else ( echo Bin directory already exists )
+if exist "%bindir%" ( cd "%bindir%" ) else ( echo Bin diretcory missing & goto :eof )
 
 :: Stealing SteamDB's download and setup php powershell script ;) side note: really have to start using powershell instead of batch
 :: Download the actual powershell script
-powershell "Import-Module BitsTransfer; Start-BitsTransfer 'https://raw.githubusercontent.com/SteamDatabase/SalienCheat/master/downloadphp.ps1' 'downloadphp.ps1'"
+if not exist "%rootdir%\%phppath%" ( powershell "Import-Module BitsTransfer; Start-BitsTransfer 'https://raw.githubusercontent.com/SteamDatabase/SalienCheat/master/downloadphp.ps1' 'downloadphp.ps1'" ) else ( echo PHP already downloaded )
 :: Run the powershell script
-powershell -executionpolicy remotesigned ".\downloadphp.ps1"
+if not exist "%rootdir%\%phppath%" ( powershell -executionpolicy remotesigned -File ".\downloadphp.ps1" ) else ( echo PHP already downloaded )
 
 :: Delete the stuff
-if exist "%bindir%\downloadphp.ps1" del "%bindir%\downloadphp.ps1"
-if exist "%bindir%\php.zip" del "%bindir%\php.zip"
+if exist "downloadphp.ps1" del "downloadphp.ps1"
+if exist "php.zip" del "php.zip"
+
+goto :eof
 
 ::===============================================================================================================::
 
@@ -173,12 +175,12 @@ if %enabled%==false ( echo %name% - Disabled & goto :eof )
 echo %name% - Starting bot
 
 :: Checks
-:: Skips starting bot if base64token or no token file configured
+:: Skips starting bot if token
 if not defined token ( echo %name% - Token not configured & pause & goto :eof )
 
 :: Actual script stuff
-:: Opens CMD Window > Sets title and color of window > Changes to dir > starts bot
-set commandline="title Sailen Bot - %name% & color %color% & cd %botdir% & %phppath% %botpath% %token% & if %debug%==true pause & exit"
+:: Opens CMD Window > Sets title and color of window > starts bot
+set commandline="title Sailen Bot - %name% & color %color% & %phppath% %botpath% %token% & if %debug%==true pause & exit"
 if %minimized%==true (start /min cmd /k  %commandline%) else (start cmd /k %commandline%)
 
 goto :eof
@@ -209,10 +211,10 @@ goto :eof
 
 :: Don't change these
 set enabled=false
+set name=untitled
 set token=
 set botargs=
 set minimized=false
-set name=untitled
 set color=0C
 
 goto :eof
