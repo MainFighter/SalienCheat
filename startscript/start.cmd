@@ -4,7 +4,7 @@ cd "%~dp0"
 :: Made by Main Fighter [mainfighter.com]
 :: Start script for SteamDB's SailenCheat [https://github.com/SteamDatabase/SalienCheat]
 :: Adapted from start script for meepen's sailen-bot [https://github.com/meepen/salien-bot]
-:: v1.3.1 [30-06-2018]
+:: v1.3.2 [30-06-2018]
 
 ::===============================================================================================================::
 
@@ -118,7 +118,7 @@ exit
 :: Actual script stuff
 :: Should only kill Sailen Bot instances
 :: Might improve later, only really adding it for myself
-taskkill /f /im cmd.exe /fi "WINDOWTITLE eq Sailen Bot*" & taskkill /f /im node.exe /fi "WINDOWTITLE eq Sailen Bot*" & echo Bots killed
+taskkill /f /im cmd.exe /fi "WINDOWTITLE eq Sailen Bot*" & taskkill /f /im php.exe /fi "WINDOWTITLE eq Sailen Bot*" & echo Bots killed
 
 goto :eof
 
