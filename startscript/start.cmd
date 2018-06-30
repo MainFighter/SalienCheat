@@ -4,7 +4,7 @@ cd "%~dp0"
 :: Made by Main Fighter [mainfighter.com]
 :: Start script for SteamDB's SailenCheat [https://github.com/SteamDatabase/SalienCheat]
 :: Adapted from start script for meepen's sailen-bot [https://github.com/meepen/salien-bot]
-:: v1.2.0 [24-06-2018]
+:: v1.3.0 [30-06-2018]
 
 ::===============================================================================================================::
 
@@ -39,6 +39,19 @@ if %killrunning%==true (
     cls 
 )
 
+:: Download PHP
+if %autodownloadphp%==true (
+    color %cmdcolor%
+    title Start script for SteamDB's SailenCheat - Download PHP
+    echo.
+    echo Downloading PHP
+    echo.
+    cd "%rootdir%"
+    call :DownloadPHP
+    if %debug%==true pause
+    cls
+)
+
 :: Clone botfiles
 if %autodownloadbot%==true (
     color %cmdcolor%
@@ -53,12 +66,12 @@ if %autodownloadbot%==true (
 )
 
 :: Checks if bot files exist, if they don't the script will throw fatal error
-if not exist "%botdirectory%" ( 
-    set error=%botdirectory% not found 
+if not exist "%botdir%" ( 
+    set error=%botdir% not found 
     set fatal=true
     
-    if not exist "%botdirectory%\cheat.php" ( 
-        set error2=%botdirectory%\cheat.php not found 
+    if not exist "%botdir%\cheat.php" ( 
+        set error2=%botdir%\cheat.php not found 
         set fatal=true 
     )
     
@@ -111,11 +124,29 @@ goto :eof
 
 ::===============================================================================================================::
 
+:DownloadPHP
+
+:: Actual script stuff
+if not exist "%bindir%" ( mkdir "%bindir%" ) else ( echo %bindir% already exists )
+if exist "%bindir%" ( cd "%bindir%" ) else ( echo %bindir% missing & goto :eof )
+
+:: Stealing SteamDB's download and setup php powershell script ;) side note: really have to start using powershell instead of batch
+:: Download the actual powershell script
+powershell "Import-Module BitsTransfer; Start-BitsTransfer 'https://raw.githubusercontent.com/SteamDatabase/SalienCheat/master/downloadphp.ps1' 'downloadphp.ps1'"
+:: Run the powershell script
+powershell -executionpolicy remotesigned ".\downloadphp.ps1"
+
+:: Delete the stuff
+if exist "%bindir%\downloadphp.ps1" del "%bindir%\downloadphp.ps1"
+if exist "%bindir%\php.zip" del "%bindir%\php.zip"
+
+::===============================================================================================================::
+
 :DownloadBotFiles
 
 :: Actual script stuff
 :: Checks to make sure botfiles doesn't already exist > if it doesn't it clones the bot files to the botfiles directory
-if not exist "%botdirectory%" ( git clone --quiet https://github.com/SteamDatabase/SalienCheat.git "%botdirectory%" & echo Bot files downloaded ) else ( echo Bot files already exist )
+if not exist "%botdir%" ( git clone --quiet https://github.com/SteamDatabase/SalienCheat.git "%botdir%" & echo Bot files downloaded ) else ( echo Bot files already exist )
 
 goto :eof
 
@@ -125,7 +156,7 @@ goto :eof
 
 :: Actual script stuff
 :: Checks if botfiles exists > if it does then update botfiles using git
-if exist "%botdirectory%" ( cd "%botdirectory%" & git pull --quiet & echo Bot files updated ) else ( echo Bot files don't exist )
+if exist "%botdir%" ( cd "%botdir%" & git pull --quiet & echo Bot files updated ) else ( echo Bot files don't exist )
 
 goto :eof
 
@@ -147,7 +178,7 @@ if not defined token ( echo %name% - Token not configured & pause & goto :eof )
 
 :: Actual script stuff
 :: Opens CMD Window > Sets title and color of window > Changes to dir > starts bot
-set commandline="title Sailen Bot - %name% & color %color% & cd %botdirectory% & %phppath% %botpath% %token% & if %debug%==true pause & exit"
+set commandline="title Sailen Bot - %name% & color %color% & cd %botdir% & %phppath% %botpath% %token% & if %debug%==true pause & exit"
 if %minimized%==true (start /min cmd /k  %commandline%) else (start cmd /k %commandline%)
 
 goto :eof
